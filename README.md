@@ -226,6 +226,7 @@ sample's cells and the byte-order mark).
 | sample cells written as given | made safe to open (`=…` gets a leading apostrophe) |
 | REST namespace `importers/v1` | `sugarcommerce-importers/v1` (`Runtime::rest_namespace()`); prefixed builds `{prefix}-sugarcommerce-importers/v1` |
 | script and style handle `importers` | `sugarcommerce-importers` (`Runtime::handle()`) |
+| `Utils\Assets` (its own copy of the asset-URL arithmetic) | `SugarCommerce\Plugin\Assets`, the one asset-URL helper of these packages |
 | transients `importers_file_{uuid}`, `importers_run_{uuid}`, hook `importers_sweep` | `sugarcommerce_importers_…` (`Runtime::key()`, `Runtime::hook()`) |
 | icon class `arraypress-icon` | `sugarcommerce-icon` (`Screen::ICON_CLASS`, the same as sugarcommerce/fields') |
 | text domain `arraypress` | `sugarcommerce` |

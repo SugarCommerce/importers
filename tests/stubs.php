@@ -40,6 +40,7 @@ function ri_reset_globals(): void {
 	$GLOBALS['ri_cron']        = [];
 	$GLOBALS['_parent_pages']  = [];
 	$GLOBALS['ri_timezone']    = 'UTC';
+	$GLOBALS['ri_enqueued']    = [];
 
 	foreach ( [ 'importers', 'hooked' ] as $property ) {
 		if ( class_exists( 'SugarCommerce\\Importers\\Importers' ) ) {
@@ -697,4 +698,51 @@ if ( ! class_exists( 'WP_Error' ) ) {
 			$this->data[ $code ] = $data;
 		}
 	}
+}
+
+if ( ! defined( 'WP_CONTENT_DIR' ) ) {
+	define( 'WP_CONTENT_DIR', dirname( __DIR__, 5 ) );
+}
+
+if ( ! function_exists( 'wp_normalize_path' ) ) {
+	function wp_normalize_path( $path ) {
+		return (string) preg_replace( '#/+#', '/', str_replace( '\\', '/', (string) $path ) );
+	}
+}
+
+if ( ! function_exists( 'content_url' ) ) {
+	function content_url( $path = '' ) {
+		return 'https://example.test/wp-content' . ( '' === $path ? '' : '/' . ltrim( (string) $path, '/' ) );
+	}
+}
+
+if ( ! function_exists( 'site_url' ) ) {
+	function site_url( $path = '' ) {
+		return 'https://example.test/' . ltrim( (string) $path, '/' );
+	}
+}
+
+if ( ! function_exists( 'wp_register_style' ) ) {
+	function wp_register_style( $handle, $src, $deps = [], $ver = false, $media = 'all' ) {
+		$GLOBALS['ri_enqueued'][ $handle ]['style'] = $src;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_register_script' ) ) {
+	function wp_register_script( $handle, $src, $deps = [], $ver = false, $args = [] ) {
+		$GLOBALS['ri_enqueued'][ $handle ]['script'] = $src;
+		$GLOBALS['ri_enqueued'][ $handle ]['deps']   = $deps;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_enqueue_style' ) ) {
+	function wp_enqueue_style( $handle ) {}
+}
+
+if ( ! function_exists( 'wp_enqueue_script' ) ) {
+	function wp_enqueue_script( $handle ) {}
 }

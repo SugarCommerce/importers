@@ -538,4 +538,19 @@ final class ImporterTest extends TestCase {
 
 		return $html;
 	}
+
+	/**
+	 * The screen's stylesheet and script are this package's own, served
+	 * from wherever the package sits, by sugarcommerce/plugin's Assets.
+	 */
+	public function test_the_screen_loads_the_packages_assets(): void {
+		$this->importer()->enqueue();
+
+		$handle = Runtime::handle();
+
+		$this->assertStringStartsWith( 'https://example.test/wp-content/', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
+		$this->assertStringEndsWith( '/importers/assets/css/importers.css', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
+		$this->assertStringEndsWith( '/importers/assets/js/importers.js', $GLOBALS['ri_enqueued'][ $handle ]['script'] );
+		$this->assertSame( [ 'wp-api-fetch' ], $GLOBALS['ri_enqueued'][ $handle ]['deps'] );
+	}
 }

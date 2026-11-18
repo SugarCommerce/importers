@@ -12,8 +12,8 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers;
 
-use SugarCommerce\Importers\Utils\Assets;
 use SugarCommerce\Importers\Utils\Runtime;
+use SugarCommerce\Plugin\Assets;
 
 /**
  * One import screen, and the operations on it.
@@ -304,7 +304,7 @@ final class Importer {
 	 * @return void
 	 */
 	public function enqueue(): void {
-		Assets::style( Runtime::handle(), 'css/importers.css' );
-		Assets::script( Runtime::handle(), 'js/importers.js', [ 'wp-api-fetch' ] );
+		Assets::enqueue_style( Runtime::handle(), __FILE__, 'css/importers.css' );
+		Assets::enqueue_script( Runtime::handle(), __FILE__, 'js/importers.js', [ 'wp-api-fetch' ] );
 	}
 }

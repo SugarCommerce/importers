@@ -13,6 +13,7 @@
   "require": {
     "php": ">=8.3",
     "sugarcommerce/jobs": "dev-main",
+    "sugarcommerce/plugin": "dev-main",
     "sugarcommerce/text": "dev-main"
   },
   "require-dev": {
@@ -29,6 +30,13 @@
     "sugarcommerce/money": "Checks that a currency column holds a real ISO 4217 code."
   },
   "repositories": [
+    {
+      "type": "path",
+      "url": "../plugin",
+      "options": {
+        "symlink": false
+      }
+    },
     {
       "type": "path",
       "url": "../jobs",
