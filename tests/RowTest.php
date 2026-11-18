@@ -133,6 +133,25 @@ final class RowTest extends TestCase {
 	}
 
 	/**
+	 * A date is the site's: one with no timezone is read as site time and
+	 * stays as written, and one with an offset is that moment, written in
+	 * site time -- not converted to UTC and then passed off as local.
+	 */
+	public function test_a_date_is_read_and_written_in_the_sites_timezone(): void {
+		$GLOBALS['ri_timezone'] = 'America/New_York';
+
+		$this->assertSame( '2026-03-04 10:00:00', $this->field( '2026-03-04 10:00', [ 'type' => 'datetime' ] ) );
+		$this->assertSame( '2026-03-03 18:00:00', $this->field( '2026-03-04T01:00:00+02:00', [ 'type' => 'datetime' ] ) );
+		$this->assertSame( '2026-03-03 18:00:00', $this->field( '2026-03-04T01:00:00+02:00', [ 'type' => 'datetime', 'date_format' => 'Y-m-d\\TH:i:sP' ] ) );
+		$this->assertSame( '2026-03-03', $this->field( '2026-03-04T01:00:00+02:00', [ 'type' => 'date' ] ) );
+		$this->assertSame(
+			( new \DateTimeImmutable( 'today', new \DateTimeZone( 'America/New_York' ) ) )->format( 'Y-m-d' ),
+			$this->field( 'today', [ 'type' => 'date' ] )
+		);
+		$this->assertSame( 'not a date', \SugarCommerce\Importers\Row\Cast::to( 'not a date', 'date' ), 'Handed back for Check to refuse.' );
+	}
+
+	/**
 	 * A date that does not keep the declared format is refused.
 	 *
 	 * Including one that only nearly does: createFromFormat reads 2026-13-45

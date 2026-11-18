@@ -134,7 +134,7 @@ row errors are kept, and the rest counted.
 | `min_length`, `max_length`, `pattern` | For text. |
 | `uppercase`, `lowercase` | Change the case. |
 | `separator` | Split one cell into a list, `red|green|blue`. |
-| `date_format` | The one format dates in the file must be in; without it, whatever `strtotime()` reads. |
+| `date_format` | The one format dates in the file must be in; without it, whatever `strtotime()` reads. Dates are read and written in the site's timezone: one with no timezone stays as written, one with an offset is converted to site time. |
 | `post_type`, `post_status`, `taxonomy` | Where a `post` or `term` is looked for. |
 | `match_by` | `id`, `slug`, `title`, `name`, `email`, `login` or `meta` (with `meta_key`); without it an id, then a slug, then a title or name. |
 | `create` | Create a `term` that is not there yet (not on a dry run). |

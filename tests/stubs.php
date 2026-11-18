@@ -39,6 +39,7 @@ function ri_reset_globals(): void {
 	$GLOBALS['ri_routes']      = [];
 	$GLOBALS['ri_cron']        = [];
 	$GLOBALS['_parent_pages']  = [];
+	$GLOBALS['ri_timezone']    = 'UTC';
 
 	foreach ( [ 'importers', 'hooked' ] as $property ) {
 		if ( class_exists( 'SugarCommerce\\Importers\\Importers' ) ) {
@@ -133,6 +134,12 @@ if ( ! function_exists( 'is_wp_error' ) ) {
 if ( ! function_exists( '_doing_it_wrong' ) ) {
 	function _doing_it_wrong( $function_name, $message, $version ) {
 		$GLOBALS['ri_wrong'][] = $message;
+	}
+}
+
+if ( ! function_exists( 'wp_timezone' ) ) {
+	function wp_timezone() {
+		return new DateTimeZone( $GLOBALS['ri_timezone'] ?? 'UTC' );
 	}
 }
 

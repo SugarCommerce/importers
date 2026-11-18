@@ -13,6 +13,7 @@ declare( strict_types=1 );
 namespace SugarCommerce\Importers\Row;
 
 use DateTimeImmutable;
+use Exception;
 use WP_Error;
 
 /**
@@ -163,10 +164,11 @@ final class Cast {
 	/**
 	 * A date, normalised.
 	 *
-	 * No timezone conversion: the value is parsed and written back in a
-	 * standard shape, and a file that means local time still means local
-	 * time. Converting here would be a guess about a file this library has
-	 * never seen.
+	 * In the site's timezone: a value with no timezone is read as site time
+	 * and written back as it was, so a file that means local time still
+	 * means local time. A value that names its offset is that moment,
+	 * written in site time. Parsing in UTC instead turned "today" into
+	 * UTC's date, and wrote an offset value in UTC as if it were local.
 	 *
 	 * @param string               $value  The raw cell.
 	 * @param array<string, mixed> $field  The field's declaration.
@@ -176,6 +178,7 @@ final class Cast {
 	 */
 	private static function date( string $value, array $field, string $format ): mixed {
 		$expected = (string) ( $field['date_format'] ?? '' );
+		$timezone = wp_timezone();
 
 		// A declared input format is a promise about the file. Anything that
 		// does not keep it is handed back for Check to report, rather than
@@ -183,18 +186,22 @@ final class Cast {
 		// how 03/04/2026 imports as the fourth of March in one file and the
 		// third of April in the next.
 		if ( '' !== $expected ) {
-			$parsed = DateTimeImmutable::createFromFormat( '!' . $expected, $value );
+			$parsed = DateTimeImmutable::createFromFormat( '!' . $expected, $value, $timezone );
 
 			// Round-tripped, because createFromFormat is lenient: it reads
 			// 2026-13-45 against Y-m-d and rolls it forward into 2027. A
 			// value that does not come back as it went in did not match.
 			return false !== $parsed && $parsed->format( $expected ) === $value
-				? $parsed->format( $format )
+				? $parsed->setTimezone( $timezone )->format( $format )
 				: $value;
 		}
 
-		$parsed = strtotime( $value );
+		try {
+			$parsed = new DateTimeImmutable( $value, $timezone );
+		} catch ( Exception ) {
+			return $value;
+		}
 
-		return false === $parsed ? $value : gmdate( $format, $parsed );
+		return $parsed->setTimezone( $timezone )->format( $format );
 	}
 }
