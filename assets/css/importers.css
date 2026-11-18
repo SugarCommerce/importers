@@ -1,0 +1,44 @@
+/**
+ * Import screens.
+ *
+ * Almost nothing. The screen is core's .wrap, .postbox, .form-table,
+ * .widefat, .nav-tab-wrapper, .notice and .button — the eight hundred and
+ * fifty lines this replaces were re-styling those.
+ *
+ * What is left is the two things core has no component for: a progress bar
+ * that is the width of the box, and a list of row errors that has to scroll
+ * rather than push the page to a hundred screens long.
+ *
+ * @package SugarCommerce\Importers
+ */
+
+.importers-progress {
+	width: 100%;
+	height: 1.5em;
+}
+
+.importers-errors {
+	max-height: 20em;
+	overflow-y: auto;
+	border: 1px solid #dcdcde;
+}
+
+.importers-errors td {
+	vertical-align: top;
+}
+
+/* Right-aligned and lined up, because they are read as a column of figures. */
+.importers-summary td:last-child {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+/*
+ * A tab or operation icon is a Dashicons span or, given as `set:name`,
+ * inline SVG; both carry .sugarcommerce-icon. The SVG sits in the 20px box at
+ * the top of the line, where core puts a Dashicon.
+ */
+.nav-tab svg.sugarcommerce-icon,
+.hndle svg.sugarcommerce-icon {
+	vertical-align: top;
+}
