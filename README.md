@@ -201,7 +201,11 @@ script handle, transient keys and sweep hook, worked out from its prefixed
 namespace (`Utils\Runtime`): `sugarcommerce-importers` unprefixed,
 `{prefix}-sugarcommerce-importers` in a prefixed build. The REST namespace
 matters most: same-path routes are appended rather than replaced, so a shared
-one would let the plugin that registered first answer the other's imports.
+one would let the plugin that registered first answer the other's imports. A
+prefix that itself starts `SugarCommerce\` keeps all its segments --
+`SugarCommerce\Playground\Vendor\` gives
+`sugarcommerce-playground-vendor-sugarcommerce-importers/v1` -- so a plugin of
+the family is never taken for an unprefixed copy.
 
 ## Moving from arraypress/wp-*
 

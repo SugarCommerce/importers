@@ -217,6 +217,23 @@ final class ImporterTest extends TestCase {
 	}
 
 	/**
+	 * A plugin of the family prefixes with a namespace that also starts
+	 * "SugarCommerce", and its build is still its own.
+	 */
+	public function test_a_family_plugin_build_is_not_taken_for_the_library(): void {
+		$playground = Runtime::prefix_for( 'SugarCommerce\\Playground\\Vendor\\SugarCommerce\\Importers\\Utils' );
+
+		$this->assertSame( 'sugarcommerce-playground-vendor-sugarcommerce-importers', $playground );
+		$this->assertNotSame(
+			$playground,
+			Runtime::prefix_for( 'SugarCommerce\\Kitchen\\Vendor\\SugarCommerce\\Importers\\Utils' ),
+			'Two plugins of the family share a name.'
+		);
+		$this->assertSame( 'sugarcart-sugarcommerce-importers', Runtime::prefix_for( 'SugarCart\\Vendor\\SugarCommerce\\Importers\\Utils' ), 'A plugin outside the family keeps its name.' );
+		$this->assertSame( 'sugarcommerce-importers', Runtime::prefix_for( '\\SugarCommerce\\Importers\\Utils\\' ) );
+	}
+
+	/**
 	 * A request naming a screen nobody registered is refused.
 	 *
 	 * It used to fall back to manage_options, which answers for a screen this
