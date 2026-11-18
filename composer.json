@@ -78,6 +78,13 @@
       "options": {
         "symlink": false
       }
+    },
+    {
+      "type": "path",
+      "url": "../security",
+      "options": {
+        "symlink": false
+      }
     }
   ],
   "autoload": {
