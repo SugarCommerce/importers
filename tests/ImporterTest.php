@@ -14,6 +14,7 @@ use SugarCommerce\Importers\Importers;
 use SugarCommerce\Importers\Progress;
 use SugarCommerce\Importers\Rest\Controller;
 use SugarCommerce\Importers\Screen;
+use SugarCommerce\StatusBadge\StatusBadge;
 use SugarCommerce\Importers\Utils\Runtime;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -333,7 +334,12 @@ final class ImporterTest extends TestCase {
 		$this->assertStringContainsString( '<code>sku</code>', $html );
 		$this->assertStringContainsString( 'Required', $html );
 		$this->assertStringContainsString( 'A number', $html );
-		$this->assertStringContainsString( 'Download a sample file', $html );
+		$this->assertStringContainsString( 'Download Sample File', $html );
+
+		// Needed or not is a badge, the family's, not a bare word: the
+		// required code in the scheme's blue, the optional rest in grey.
+		$this->assertMatchesRegularExpression( '#<tr data-field="sku"[^>]* data-required>.*?wp-status-badge--info">.*?Required</span></td></tr>#s', $html );
+		$this->assertMatchesRegularExpression( '#<tr data-field="price"[^>]*>.*?wp-status-badge--default">.*?Optional</span></td></tr>#s', $html );
 	}
 
 	/**
@@ -362,7 +368,12 @@ final class ImporterTest extends TestCase {
 	 * Tabs appear when there is more than one group, and not before.
 	 */
 	public function test_tabs_appear_only_when_there_is_more_than_one(): void {
-		$this->assertStringNotContainsString( 'nav-tab-wrapper', $this->render( $this->importer() ) );
+		$this->assertStringNotContainsString( 'importers__tabs', $this->render( $this->importer() ) );
+
+		Importers::unregister( 'myplugin' );
+
+		// One tab is not a choice, so it is not a row of one pill.
+		$this->assertStringNotContainsString( 'importers__tabs', $this->render( $this->importer( [ 'tabs' => [ 'catalogue' => 'Catalogue' ] ] ) ) );
 
 		Importers::unregister( 'myplugin' );
 
@@ -377,8 +388,9 @@ final class ImporterTest extends TestCase {
 
 		$html = $this->render( $importer );
 
-		$this->assertStringContainsString( 'nav-tab-wrapper', $html );
-		$this->assertSame( 1, substr_count( $html, 'nav-tab-active' ) );
+		$this->assertStringContainsString( '<nav class="importers__tabs"', $html );
+		$this->assertSame( 2, preg_match_all( '#<a [^>]*class="importers__tab[ "]#', $html ) );
+		$this->assertSame( 1, substr_count( $html, 'aria-current="page"' ) );
 
 		// One tab at a time, so the other's operation is not on the page.
 		$this->assertStringContainsString( 'Products', $html );
@@ -558,7 +570,9 @@ final class ImporterTest extends TestCase {
 
 	/**
 	 * The screen's stylesheet and script are this package's own, served
-	 * from wherever the package sits, by sugarcommerce/plugin's Assets.
+	 * from wherever the package sits, by sugarcommerce/plugin's Assets. The
+	 * badges' stylesheet comes first, because the screen's sits over it,
+	 * and the script's words are in the library's text domain.
 	 */
 	public function test_the_screen_loads_the_packages_assets(): void {
 		$this->importer()->enqueue();
@@ -568,6 +582,9 @@ final class ImporterTest extends TestCase {
 		$this->assertStringStartsWith( 'https://example.test/wp-content/', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
 		$this->assertStringEndsWith( '/importers/assets/css/importers.css', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
 		$this->assertStringEndsWith( '/importers/assets/js/importers.js', $GLOBALS['ri_enqueued'][ $handle ]['script'] );
-		$this->assertSame( [ 'wp-api-fetch' ], $GLOBALS['ri_enqueued'][ $handle ]['deps'] );
+		$this->assertSame( [ 'wp-i18n' ], $GLOBALS['ri_enqueued'][ $handle ]['deps'] );
+		$this->assertSame( [ StatusBadge::handle() ], $GLOBALS['ri_enqueued'][ $handle ]['style_deps'] );
+		$this->assertStringEndsWith( '/status-badge/assets/css/status-badge.css', $GLOBALS['ri_enqueued'][ StatusBadge::handle() ]['style'] );
+		$this->assertSame( 'sugarcommerce', $GLOBALS['ri_enqueued'][ $handle ]['domain'] );
 	}
 }

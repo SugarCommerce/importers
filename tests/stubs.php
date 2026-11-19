@@ -724,7 +724,8 @@ if ( ! function_exists( 'site_url' ) ) {
 
 if ( ! function_exists( 'wp_register_style' ) ) {
 	function wp_register_style( $handle, $src, $deps = [], $ver = false, $media = 'all' ) {
-		$GLOBALS['ri_enqueued'][ $handle ]['style'] = $src;
+		$GLOBALS['ri_enqueued'][ $handle ]['style']      = $src;
+		$GLOBALS['ri_enqueued'][ $handle ]['style_deps'] = $deps;
 
 		return true;
 	}
@@ -741,6 +742,20 @@ if ( ! function_exists( 'wp_register_script' ) ) {
 
 if ( ! function_exists( 'wp_enqueue_style' ) ) {
 	function wp_enqueue_style( $handle ) {}
+}
+
+if ( ! function_exists( 'wp_style_is' ) ) {
+	function wp_style_is( $handle, $status = 'enqueued' ) {
+		return isset( $GLOBALS['ri_enqueued'][ $handle ]['style'] );
+	}
+}
+
+if ( ! function_exists( 'wp_set_script_translations' ) ) {
+	function wp_set_script_translations( $handle, $domain = 'default', $path = '' ) {
+		$GLOBALS['ri_enqueued'][ $handle ]['domain'] = $domain;
+
+		return true;
+	}
 }
 
 if ( ! function_exists( 'wp_enqueue_script' ) ) {

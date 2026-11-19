@@ -14,6 +14,7 @@ namespace SugarCommerce\Importers;
 
 use SugarCommerce\Importers\Utils\Runtime;
 use SugarCommerce\Plugin\Assets;
+use SugarCommerce\StatusBadge\StatusBadge;
 
 /**
  * One import screen, and the operations on it.
@@ -304,7 +305,17 @@ final class Importer {
 	 * @return void
 	 */
 	public function enqueue(): void {
-		Assets::enqueue_style( Runtime::handle(), __FILE__, 'css/importers.css' );
-		Assets::enqueue_script( Runtime::handle(), __FILE__, 'js/importers.js', [ 'wp-api-fetch' ] );
+		// The required and optional badges. Loaded here rather than when the
+		// first one is drawn, which is after the head has been printed.
+		( new StatusBadge() )->enqueue();
+
+		Assets::enqueue_style( Runtime::handle(), __FILE__, 'css/importers.css', [ StatusBadge::handle() ] );
+		Assets::enqueue_script( Runtime::handle(), __FILE__, 'js/importers.js', [ 'wp-i18n' ] );
+
+		// The script's words -- "Imported 40 of 120 rows" -- in the
+		// library's text domain, like the screen around them.
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( Runtime::handle(), 'sugarcommerce' );
+		}
 	}
 }

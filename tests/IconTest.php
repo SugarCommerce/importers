@@ -80,16 +80,20 @@ final class IconTest extends TestCase {
 	}
 
 	/**
-	 * The operation's heading.
+	 * The operation's heading: the icon in its tile, a space, the title.
+	 *
+	 * The icon has a tile of its own beside the title rather than sitting in
+	 * the heading's text, so the two are read back together here to keep
+	 * each assertion one string.
 	 *
 	 * @param string $html The screen.
 	 *
 	 * @return string
 	 */
 	private static function heading( string $html ): string {
-		preg_match( '#<h2 class="hndle">(.*?)</h2>#s', $html, $match );
+		preg_match( '#<span class="importers__head-icon">(.*?)</span><div class="importers__head-text"><h2 class="importers__title">(.*?)</h2>#s', $html, $match );
 
-		return $match[1] ?? '';
+		return ltrim( ( $match[1] ?? '' ) . ' ' . ( $match[2] ?? '' ) );
 	}
 
 	/**
@@ -148,13 +152,13 @@ final class IconTest extends TestCase {
 			]
 		);
 
-		preg_match_all( '#<a [^>]*class="nav-tab[^"]*"[^>]*>(.*?)</a>#s', $html, $tabs );
+		preg_match_all( '#<a [^>]*class="importers__tab[^"]*"[^>]*>(.*?)</a>#s', $html, $tabs );
 
 		$this->assertSame(
 			[
-				Icons::render( 'heroicons-outline:users' ) . ' Catalogue',
-				'<span class="dashicons dashicons-groups sugarcommerce-icon" aria-hidden="true"></span> People',
-				'Plain',
+				Icons::render( 'heroicons-outline:users' ) . '<span class="importers__tab-label">Catalogue</span>',
+				'<span class="dashicons dashicons-groups sugarcommerce-icon" aria-hidden="true"></span><span class="importers__tab-label">People</span>',
+				'<span class="importers__tab-label">Plain</span>',
 			],
 			$tabs[1]
 		);

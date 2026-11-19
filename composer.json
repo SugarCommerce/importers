@@ -14,6 +14,7 @@
     "php": ">=8.3",
     "sugarcommerce/jobs": "dev-main",
     "sugarcommerce/plugin": "dev-main",
+    "sugarcommerce/status-badge": "dev-main",
     "sugarcommerce/text": "dev-main"
   },
   "require-dev": {
@@ -25,7 +26,7 @@
     "wp-coding-standards/wpcs": "^3.4"
   },
   "suggest": {
-    "sugarcommerce/fields": "Draws a tab or operation icon given as `set:name` (`heroicons-outline:users`) as inline SVG, and the default upload icon as Heroicons.",
+    "sugarcommerce/fields": "Draws a tab or operation icon given as `set:name` (`heroicons-outline:users`) as inline SVG, and the screen's own icons as Heroicons rather than Dashicons.",
     "sugarcommerce/geo": "Checks that a country column holds a real ISO 3166-1 code.",
     "sugarcommerce/money": "Checks that a currency column holds a real ISO 4217 code."
   },
@@ -47,6 +48,13 @@
     {
       "type": "path",
       "url": "../dates",
+      "options": {
+        "symlink": false
+      }
+    },
+    {
+      "type": "path",
+      "url": "../status-badge",
       "options": {
         "symlink": false
       }

@@ -81,7 +81,41 @@ it) still gets its menu page, at once.
 
 An operation names its `tab`; a tab named by an operation and not declared
 is created from its key, so nothing goes missing. Tabs only show when there
-is more than one.
+is more than one, as a row of pills.
+
+### What it looks like
+
+The family's look — the settings, reports, onboarding and flyout panels'
+— so an import reads as part of the same product: white cards on the
+admin's grey, compact rounded buttons, upright help text, colour from the
+user's admin scheme. Each operation is one card for its title and four
+steps — **Upload**, **Match Columns**, **Check**, **Import** — drawn as
+onboarding's segments, with one card under it for the step it is on:
+
+* **Upload** — a drop zone that is the label of a real file input, so it
+  is pressed, tabbed to and read out like one; a file can be dropped on it
+  or chosen. The chosen file's name and size show before anything is sent,
+  and a file that is not a `.csv` or is over the site's upload limit is
+  turned away there. Under it, what the file needs: each column's name,
+  the header a file can use as it is, what it holds, its `example`, and a
+  Required or Optional badge (`sugarcommerce/status-badge`), with
+  **Download Sample File** beside the heading.
+* **Match Columns** — a select per column holding the file's own headers,
+  with the obvious ones chosen already (case, spaces and punctuation
+  ignored, so `E-mail` is `email`), and what the first row has in the
+  column chosen under each. A required column left unmatched is marked and
+  named before anything is sent.
+* **Check** — the dry run, with a bar while it runs, then how many rows are
+  ready and which rows have problems, by row number, with the reason.
+* **Import** — the same bar, then what was created, updated, skipped and
+  failed, the rows that failed, and **Import Another File**.
+
+Anything that goes wrong is said in words, above the step: the server's
+own reason when it gave one, and "We couldn't reach your site" rather than
+"Failed to fetch" when it did not. The script's words are translated
+through `wp.i18n` in the `sugarcommerce` text domain. Every layout is
+written with logical properties, so right-to-left needs no second
+stylesheet, and is checked at 1440 and 390 pixels wide.
 
 The lookups are statics:
 
@@ -116,7 +150,7 @@ request starts there — so a hundred rows that each call a slow API end the
 request early rather than outlasting the server. The time is measured with
 `sugarcommerce/jobs`' `Budget`.
 
-A dry run ("Check without importing") goes through exactly the same steps as the
+A dry run (**Check File**) goes through exactly the same steps as the
 import — matching, checking, finding posts and terms, `validate_callback` —
 and stops short of `process_callback` and of creating terms. Up to a hundred
 row errors are kept, and the rest counted.
@@ -213,8 +247,9 @@ the family is never taken for an unprefixed copy.
 package. Every class, method, configuration key, field type and callback
 keeps its name; the global functions are the `Importers` statics they always
 called. It no longer needs `wp-composer-assets`; it now requires
-`sugarcommerce/jobs` (the batch time budget) and `sugarcommerce/text` (the
-sample's cells and the byte-order mark).
+`sugarcommerce/jobs` (the batch time budget), `sugarcommerce/text` (the
+sample's cells and the byte-order mark) and `sugarcommerce/status-badge`
+(the columns' Required and Optional badges).
 
 | Old | New |
 |---|---|
@@ -235,7 +270,15 @@ sample's cells and the byte-order mark).
 | icon class `arraypress-icon` | `sugarcommerce-icon` (`Screen::ICON_CLASS`, the same as sugarcommerce/fields') |
 | text domain `arraypress` | `sugarcommerce` |
 
-Kept as they were: the `importers-*` CSS classes, the `assets/css/importers.css`
+The screen is no longer core's `.postbox`, `.form-table`, `.widefat` and
+`.nav-tab-wrapper`: it is drawn in the family's cards, so the old
+`importers-progress`, `importers-errors` and `importers-summary` classes are
+now `importers__bar`, `importers__problem-list` and `importers__stats`
+(every class is `importers__*`), and it requires `sugarcommerce/status-badge`
+for the Required and Optional badges. The script needs `wp-i18n` rather than
+`wp-api-fetch`, which it never called.
+
+Kept as they were: the `assets/css/importers.css`
 and `assets/js/importers.js` file names, the `uploads/importers/` directory
 and the `import_file` upload field. A site whose daily sweep was scheduled by
 the old copy keeps an `importers_sweep` event with nothing hooked to it until

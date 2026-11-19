@@ -1,44 +1,1160 @@
 /**
  * Import screens.
  *
- * Almost nothing. The screen is core's .wrap, .postbox, .form-table,
- * .widefat, .nav-tab-wrapper, .notice and .button — the eight hundred and
- * fifty lines this replaces were re-styling those.
+ * The look the settings, reports, onboarding and flyout panels already have,
+ * so an import reads as part of the same product: white cards with a
+ * hairline border and a twelve pixel radius on the admin's grey, a title in
+ * 14px semibold with one muted line under it, help text upright rather than
+ * italic, compact rounded buttons, and the tabs as pills. The figures are
+ * restated here rather than shared because those live in other packages'
+ * stylesheets, which an import screen does not load.
  *
- * What is left is the two things core has no component for: a progress bar
- * that is the width of the box, and a list of row errors that has to scroll
- * rather than push the page to a hundred screens long.
+ * Colour comes from the user's admin scheme (--wp-admin-theme-color), so a
+ * screen opened under Midnight is not the one blue thing on the page.
+ *
+ * Written with logical properties (inline-start, not left), so the one file
+ * serves right-to-left languages with no second sheet.
  *
  * @package SugarCommerce\Importers
  */
 
-.importers-progress {
-	width: 100%;
-	height: 1.5em;
+.importers {
+	--importers-accent: var(--wp-admin-theme-color, #2271b1);
+	--importers-accent-hover: var(--wp-admin-theme-color-darker-10, #135e96);
+	--importers-accent-soft: color-mix(in srgb, var(--importers-accent) 10%, #fff);
+	--importers-card-border: #e3e3e6;
+	--importers-card-radius: 12px;
+	--importers-inner-radius: 10px;
+	--importers-control-border: #c4c7cc;
+	--importers-control-radius: 8px;
+	--importers-text: #1f2124;
+	--importers-text-muted: #5c5f66;
+	--importers-hairline: #f1f1f3;
+	--importers-subtle: #f6f7f7;
+	--importers-success: #0a6b2d;
+	--importers-success-soft: #dff5e3;
+	--importers-warning: #6b4a00;
+	--importers-warning-soft: #fbefc9;
+	--importers-danger: #a8201f;
+	--importers-danger-soft: #fbe3e4;
+	--importers-width: 880px;
+
+	max-width: var(--importers-width);
+	color: var(--importers-text);
 }
 
-.importers-errors {
-	max-height: 20em;
-	overflow-y: auto;
-	border: 1px solid #dcdcde;
+.importers *,
+.importers *::before,
+.importers *::after {
+	box-sizing: border-box;
 }
 
-.importers-errors td {
-	vertical-align: top;
+/* Every section, row and region the script shows and hides. A rule below
+   that sets display would otherwise win over the attribute. */
+.importers [hidden] {
+	display: none !important;
 }
 
-/* Right-aligned and lined up, because they are read as a column of figures. */
-.importers-summary td:last-child {
-	text-align: right;
+.importers__intro {
+	margin: 4px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+/* ==========================================================================
+   Tabs: the same quiet pills the flyouts, reports and settings use
+
+   One row, in a white tray. The current one is filled grey and bold, its
+   icon in the theme colour. Tabs that do not fit scroll sideways rather
+   than wrapping to a second row.
+   ========================================================================== */
+
+.importers__tabs {
+	display: flex;
+	gap: 4px;
+	width: fit-content;
+	max-width: 100%;
+	margin: 16px 0 0;
+	padding: 4px;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+	background: #fff;
+	scrollbar-width: none;
+}
+
+.importers__tabs::-webkit-scrollbar {
+	display: none;
+}
+
+.importers__tab {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 6px;
+	min-height: 32px;
+	padding: 0 12px;
+	border-radius: 7px;
+	color: #2c3338;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background-color 0.12s, color 0.12s;
+}
+
+.importers__tab:hover {
+	background: var(--importers-subtle);
+	color: var(--importers-text);
+}
+
+.importers__tab.is-current,
+.importers__tab.is-current:hover {
+	background: #f0f0f1;
+	color: #1d2327;
+	font-weight: 600;
+}
+
+/* Inside the pill: the row can scroll, and a ring outside it is clipped. */
+.importers__tab:focus {
+	box-shadow: none;
+	outline: 2px solid var(--importers-accent);
+	outline-offset: -2px;
+}
+
+.importers__tab:focus:not(:focus-visible) {
+	outline: 0;
+}
+
+/* An icon is a Dashicon's span or an inline SVG; both are drawn in the
+   middle of the line rather than on its top edge. */
+.importers__tab .sugarcommerce-icon {
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	color: #787c82;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.importers__tab.is-current .sugarcommerce-icon {
+	color: var(--importers-accent);
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.importers__operation,
+.importers__section {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.importers__operation {
+	margin-top: 16px;
+}
+
+.importers__card {
+	margin: 0;
+	padding: 20px 24px;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-card-radius);
+	background: #fff;
+	box-shadow: 0 1px 2px rgba(17, 18, 20, 0.04);
+}
+
+.importers__empty {
+	margin-top: 16px;
+}
+
+.importers__empty p {
+	margin: 0;
+	color: var(--importers-text-muted);
+}
+
+.importers__card-header {
+	margin: 0 0 16px;
+}
+
+.importers__card-header--split {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px 16px;
+}
+
+.importers__card-header--split > div {
+	flex: 1 1 260px;
+	min-width: 0;
+}
+
+.importers .importers__card-title {
+	margin: 0;
+	padding: 0;
+	color: var(--importers-text);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+/* Focus is put on a heading by the script, so a screen reader starts the
+   new step from its name. Nothing to draw a ring around for anyone else. */
+.importers__card-title:focus {
+	outline: none;
+}
+
+.importers__card-description {
+	margin: 4px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.importers__card-description:empty {
+	display: none;
+}
+
+/* The operation: its icon, title and description, and the steps. */
+.importers__head-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.importers__head-icon {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--importers-inner-radius);
+	background: var(--importers-accent-soft);
+	color: var(--importers-accent);
+}
+
+.importers__head-icon .sugarcommerce-icon {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	line-height: 1;
+}
+
+.importers__head-icon:empty {
+	display: none;
+}
+
+.importers__head-text {
+	min-width: 0;
+	padding-top: 1px;
+}
+
+.importers .importers__title {
+	margin: 0;
+	padding: 0;
+	color: var(--importers-text);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.importers__description {
+	margin: 2px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+/* ==========================================================================
+   Steps
+
+   Onboarding's segments: a count and the step's name, then one bar per
+   step. Solid when done, half full where you are, empty still to come --
+   the shapes differ, not only the colours. Named under each bar on a wide
+   screen; on a phone the names go and the count says where you are.
+   ========================================================================== */
+
+.importers__count {
+	margin: 20px 0 0;
+	padding-top: 16px;
+	border-top: 1px solid var(--importers-hairline);
+	color: var(--importers-text-muted);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.importers__count-number,
+.importers__count-name {
+	color: var(--importers-text);
+	font-weight: 600;
+}
+
+.importers__steps {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 6px;
+	margin: 10px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.importers__step {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	margin: 0;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.35;
+}
+
+.importers__step-bar {
+	display: block;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--importers-card-border);
+	transition: background 0.2s;
+}
+
+.importers__step.is-done .importers__step-bar {
+	background: var(--importers-accent);
+}
+
+.importers__step.is-current .importers__step-bar {
+	background: linear-gradient(to right, var(--importers-accent) 50%, var(--importers-card-border) 50%);
+}
+
+[dir="rtl"] .importers__step.is-current .importers__step-bar {
+	background: linear-gradient(to left, var(--importers-accent) 50%, var(--importers-card-border) 50%);
+}
+
+/* One line, cut short rather than broken mid-word. */
+.importers__step-label {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.importers__step.is-current .importers__step-label {
+	color: var(--importers-text);
+	font-weight: 600;
+}
+
+.importers__step-tick {
+	display: none;
+	flex: 0 0 auto;
+	color: var(--importers-accent);
+}
+
+.importers__step.is-done .importers__step-tick {
+	display: inline-flex;
+}
+
+.importers__step-tick .sugarcommerce-icon {
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
+	line-height: 1;
+	stroke-width: 2.5;
+}
+
+/* ==========================================================================
+   Choosing a file
+
+   The zone is a label for the real input, which is kept in the page --
+   focusable, read out -- but not drawn. Its focus ring is drawn on the
+   zone instead.
+   ========================================================================== */
+
+.importers__drop {
+	position: relative;
+}
+
+.importers__file {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+	opacity: 0;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+.importers__drop-label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 28px 20px 20px;
+	border: 1.5px dashed var(--importers-control-border);
+	border-radius: var(--importers-inner-radius);
+	background: #fafafb;
+	text-align: center;
+	cursor: pointer;
+	transition: border-color 0.12s, background-color 0.12s;
+}
+
+.importers__drop-label:hover,
+.importers__drop.is-dragging .importers__drop-label {
+	border-color: var(--importers-accent);
+	background: var(--importers-accent-soft);
+}
+
+.importers__file:focus-visible + .importers__drop-label {
+	border-color: var(--importers-accent);
+	outline: 2px solid var(--importers-accent);
+	outline-offset: 2px;
+}
+
+.importers__drop-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-bottom: 4px;
+	border: 1px solid var(--importers-card-border);
+	border-radius: 50%;
+	background: #fff;
+	color: var(--importers-accent);
+}
+
+.importers__drop-icon .sugarcommerce-icon {
+	width: 22px;
+	height: 22px;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.importers__drop-title {
+	color: var(--importers-text);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.importers__drop-or {
+	color: var(--importers-text-muted);
+	font-size: 12px;
+}
+
+/* Drawn as a secondary button: pressing it is pressing the label. */
+.importers__drop-button {
+	display: inline-flex;
+	align-items: center;
+	min-height: 32px;
+	padding: 0 14px;
+	border: 1px solid var(--importers-control-border);
+	border-radius: var(--importers-control-radius);
+	background: #fff;
+	box-shadow: 0 1px 0 rgba(17, 18, 20, 0.04);
+	color: var(--importers-text);
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.importers__drop-label:hover .importers__drop-button {
+	border-color: var(--importers-accent);
+	color: var(--importers-accent);
+}
+
+.importers__drop-hint {
+	margin: 10px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: center;
+}
+
+/* The chosen file, and the uploaded one over the matching. */
+.importers__file-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+	background: #fafafb;
+}
+
+.importers__card-header + .importers__file-bar {
+	margin-bottom: 16px;
+}
+
+.importers__file-icon {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: var(--importers-control-radius);
+	background: var(--importers-accent-soft);
+	color: var(--importers-accent);
+}
+
+.importers__file-icon .sugarcommerce-icon {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	line-height: 1;
+}
+
+.importers__file-text {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.importers__file-name {
+	overflow: hidden;
+	color: var(--importers-text);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.importers__file-meta {
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.4;
 	font-variant-numeric: tabular-nums;
 }
 
-/*
- * A tab or operation icon is a Dashicons span or, given as `set:name`,
- * inline SVG; both carry .sugarcommerce-icon. The SVG sits in the 20px box at
- * the top of the line, where core puts a Dashicon.
- */
-.nav-tab svg.sugarcommerce-icon,
-.hndle svg.sugarcommerce-icon {
+.importers__icon-button {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--importers-control-radius);
+	background: none;
+	color: var(--importers-text-muted);
+	cursor: pointer;
+}
+
+.importers__icon-button:hover {
+	background: #f0f0f1;
+	color: var(--importers-text);
+}
+
+.importers__icon-button:focus-visible {
+	outline: 2px solid var(--importers-accent);
+	outline-offset: 0;
+}
+
+.importers__icon-button .sugarcommerce-icon {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.importers .importers__link {
+	flex: 0 0 auto;
+	color: var(--importers-accent);
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.importers .importers__link:hover {
+	color: var(--importers-accent-hover);
+	text-decoration: underline;
+}
+
+/* ==========================================================================
+   Buttons: compact, rounded, in the scheme's colour
+   ========================================================================== */
+
+.importers__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	margin-top: 20px;
+}
+
+.importers .button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 36px;
+	padding: 0 14px;
+	border-radius: var(--importers-control-radius);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+/* Secondary buttons are quiet: a white button with a grey edge, as the
+   drop zone's own is, so the one blue button on a card is the next step. */
+.importers .button:not(.button-primary) {
+	border-color: var(--importers-control-border);
+	background: #fff;
+	box-shadow: 0 1px 0 rgba(17, 18, 20, 0.04);
+	color: var(--importers-text);
+}
+
+.importers .button:not(.button-primary):hover {
+	border-color: var(--importers-accent);
+	background: #fff;
+	color: var(--importers-accent);
+}
+
+.importers .button:not(.button-primary):focus {
+	border-color: var(--importers-accent);
+	box-shadow: 0 0 0 1px var(--importers-accent);
+	color: var(--importers-accent);
+}
+
+.importers .button-primary {
+	border-color: var(--importers-accent);
+	background: var(--importers-accent);
+	font-weight: 600;
+}
+
+.importers .button-primary:hover,
+.importers .button-primary:focus {
+	border-color: var(--importers-accent-hover);
+	background: var(--importers-accent-hover);
+}
+
+.importers .button .sugarcommerce-icon {
+	flex: 0 0 auto;
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+	line-height: 1;
+}
+
+.importers__sample {
+	flex: 0 0 auto;
+}
+
+.importers__actions-note {
+	flex: 1 1 220px;
+	margin: 0;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+/* ==========================================================================
+   What the file needs
+
+   The tables package's look: a quiet header row, hairlines between rows
+   and no stripes, in a box with the cards' corners. On a phone each row is
+   a block: the name and its badge on one line, what it holds under them.
+   ========================================================================== */
+
+.importers__table {
+	width: 100%;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+	border-collapse: separate;
+	border-spacing: 0;
+	overflow: hidden;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.importers__table thead th {
+	padding: 9px 14px;
+	border-bottom: 1px solid var(--importers-card-border);
+	background: var(--importers-subtle);
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	font-weight: 600;
+	text-align: start;
+}
+
+.importers__table tbody th,
+.importers__table tbody td {
+	padding: 12px 14px;
+	border-top: 1px solid var(--importers-hairline);
+	color: var(--importers-text);
+	font-weight: 400;
+	text-align: start;
 	vertical-align: top;
+}
+
+.importers__table tbody tr:first-child > * {
+	border-top: 0;
+}
+
+.importers__table tbody th {
+	width: 34%;
+}
+
+.importers__table .importers__needed {
+	width: 1%;
+	text-align: end;
+	white-space: nowrap;
+}
+
+.importers__label {
+	display: block;
+	font-weight: 600;
+}
+
+/* The header to use, quietly: the name a file can use without matching. */
+.importers__table code {
+	display: block;
+	margin: 2px 0 0;
+	padding: 0;
+	background: none;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	overflow-wrap: anywhere;
+}
+
+.importers__holds {
+	display: block;
+}
+
+.importers__example {
+	display: block;
+	margin-top: 2px;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   Matching columns
+   ========================================================================== */
+
+.importers__map {
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+}
+
+.importers__map-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	align-items: start;
+	gap: 8px 20px;
+	padding: 12px 16px;
+	border-top: 1px solid var(--importers-hairline);
+}
+
+.importers__map-row:first-child {
+	border-top: 0;
+	border-radius: var(--importers-inner-radius) var(--importers-inner-radius) 0 0;
+}
+
+.importers__map-row:last-child {
+	border-radius: 0 0 var(--importers-inner-radius) var(--importers-inner-radius);
+}
+
+.importers__map-row.is-invalid {
+	background: #fdf6f6;
+}
+
+/* Down to the middle of the select beside it. */
+.importers__map-about {
+	padding-top: 8px;
+}
+
+.importers__map-title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 8px;
+}
+
+.importers__map-label {
+	color: var(--importers-text);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.importers__map-holds,
+.importers__map-value {
+	margin: 2px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.importers__map-value {
+	margin-top: 6px;
+}
+
+.importers .importers__map-control select {
+	width: 100%;
+	max-width: none;
+	min-height: 36px;
+	padding-block: 0;
+	padding-inline: 10px 30px;
+	border-color: var(--importers-control-border);
+	border-radius: var(--importers-control-radius);
+	color: var(--importers-text);
+	font-size: 13px;
+}
+
+.importers .importers__map-control select:focus {
+	border-color: var(--importers-accent);
+	box-shadow: 0 0 0 1px var(--importers-accent);
+	outline: none;
+}
+
+.importers .importers__map-control select[aria-invalid="true"] {
+	border-color: #d63638;
+}
+
+/* ==========================================================================
+   Something went wrong
+   ========================================================================== */
+
+[data-region="alert"]:empty {
+	display: none;
+}
+
+.importers__alert {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 12px 14px;
+	border: 1px solid #f2c9cb;
+	border-radius: var(--importers-inner-radius);
+	background: #fcf0f1;
+	color: var(--importers-text);
+}
+
+.importers__alert .sugarcommerce-icon {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	color: #d63638;
+	font-size: 20px;
+	line-height: 1;
+}
+
+.importers__alert p {
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+/* ==========================================================================
+   Running, and how it went
+   ========================================================================== */
+
+.importers__bar {
+	height: 8px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: #ebebed;
+}
+
+.importers__bar-fill {
+	display: block;
+	width: 0;
+	height: 100%;
+	border-radius: inherit;
+	background: var(--importers-accent);
+	transition: width 0.3s ease;
+}
+
+.importers__progress-count {
+	margin: 8px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+}
+
+.importers__mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-bottom: 14px;
+	border-radius: 50%;
+}
+
+.importers__mark .sugarcommerce-icon {
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+	line-height: 1;
+}
+
+.importers__mark--success {
+	background: var(--importers-success-soft);
+	color: var(--importers-success);
+}
+
+.importers__mark--warning {
+	background: var(--importers-warning-soft);
+	color: var(--importers-warning);
+}
+
+.importers__report .importers__card-title {
+	font-size: 16px;
+}
+
+.importers__stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	gap: 12px;
+	margin: 0;
+}
+
+.importers__stat {
+	padding: 12px 14px;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+}
+
+.importers__stat dt {
+	color: var(--importers-text-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.importers__stat dd {
+	margin: 4px 0 0;
+	color: var(--importers-text);
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+}
+
+.importers__stat--good dd {
+	color: var(--importers-success);
+}
+
+.importers__stat--bad dd {
+	color: var(--importers-danger);
+}
+
+.importers__problems {
+	margin-top: 20px;
+}
+
+.importers .importers__problems-title {
+	margin: 0 0 8px;
+	color: var(--importers-text);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+/* Scrolls by itself rather than pushing the page a hundred screens long. */
+.importers__problem-list {
+	max-height: 20em;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	border: 1px solid var(--importers-card-border);
+	border-radius: var(--importers-inner-radius);
+	list-style: none;
+}
+
+.importers__problem-list li {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 14px;
+	border-top: 1px solid var(--importers-hairline);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.importers__problem-list li:first-child {
+	border-top: 0;
+}
+
+.importers__problem-row {
+	flex: 0 0 auto;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--importers-danger-soft);
+	color: var(--importers-danger);
+	font-size: 12px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.importers__problem-reason {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.importers__problems-more {
+	margin: 8px 0 0;
+	color: var(--importers-text-muted);
+	font-size: 12px;
+}
+
+/* ==========================================================================
+   Narrower screens
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+
+	.importers__card {
+		padding: 18px 16px;
+	}
+
+	.importers .button {
+		min-height: 40px;
+		font-size: 14px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	/* The names go, still read out from the list, and the count says
+	   where you are. */
+	.importers__step-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.importers__steps {
+		gap: 4px;
+	}
+
+	.importers__head-icon {
+		width: 36px;
+		height: 36px;
+	}
+
+	.importers__drop-label {
+		padding: 22px 16px 18px;
+	}
+
+	.importers__actions .button {
+		flex: 1 1 auto;
+	}
+
+	.importers__actions .button-primary {
+		flex: 1 1 100%;
+	}
+
+	.importers__sample {
+		width: 100%;
+	}
+
+	/* Each column a block: name and badge on one line, what it holds and
+	   its example under them. */
+	.importers__table thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.importers__table,
+	.importers__table tbody {
+		display: block;
+	}
+
+	.importers__table tbody tr {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 4px 12px;
+		padding: 12px 14px;
+		border-top: 1px solid var(--importers-hairline);
+	}
+
+	.importers__table tbody tr:first-child {
+		border-top: 0;
+	}
+
+	.importers__table tbody th,
+	.importers__table tbody td {
+		display: block;
+		width: auto;
+		padding: 0;
+		border: 0;
+	}
+
+	.importers__table tbody th {
+		grid-row: 1;
+		grid-column: 1;
+	}
+
+	.importers__table tbody .importers__needed {
+		grid-row: 1;
+		grid-column: 2;
+	}
+
+	.importers__table tbody td:not(.importers__needed) {
+		grid-row: 2;
+		grid-column: 1 / -1;
+	}
+
+	.importers__map-row {
+		grid-template-columns: minmax(0, 1fr);
+		padding: 12px 14px;
+	}
+
+	.importers__map-about {
+		padding-top: 0;
+	}
+
+	.importers__problem-list li {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.importers *,
+	.importers *::before,
+	.importers *::after {
+		transition: none !important;
+	}
+}
+
+/* In forced colours the tints go, so whatever is a tint needs an edge. */
+@media (forced-colors: active) {
+
+	.importers__step-bar,
+	.importers__bar,
+	.importers__tab.is-current {
+		border: 1px solid CanvasText;
+	}
+
+	.importers__step.is-done .importers__step-bar,
+	.importers__step.is-current .importers__step-bar,
+	.importers__bar-fill {
+		background: Highlight;
+	}
 }

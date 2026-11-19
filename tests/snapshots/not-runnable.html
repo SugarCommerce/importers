@@ -1,0 +1,221 @@
+<div class="wrap importers">
+<h1>Import</h1>
+<hr class="wp-header-end">
+<div class="importers__operation" id="myplugin-products" data-importer="myplugin" data-operation="products" data-rest="https://example.test/wp-json/sugarcommerce-importers/v1" data-nonce="nonce" data-max-size="8388608">
+<div class="importers__card importers__head">
+<div class="importers__head-row">
+<span class="importers__head-icon">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+<div class="importers__head-text">
+<h2 class="importers__title">Products</h2>
+</div>
+</div>
+<p class="importers__count" id="myplugin-products-steps">Step <span class="importers__count-number" data-region="step-number">1</span> of 4: <span class="importers__count-name" data-region="step-name">Upload</span>
+</p>
+<ol class="importers__steps" aria-labelledby="myplugin-products-steps">
+<li class="importers__step is-current" data-marker="choose" aria-current="step">
+<span class="importers__step-bar" aria-hidden="true">
+</span>
+<span class="importers__step-label">
+<span class="importers__step-tick" aria-hidden="true">
+<svg width="14" height="14" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>Upload</span>
+</li>
+<li class="importers__step" data-marker="map">
+<span class="importers__step-bar" aria-hidden="true">
+</span>
+<span class="importers__step-label">
+<span class="importers__step-tick" aria-hidden="true">
+<svg width="14" height="14" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>Match Columns</span>
+</li>
+<li class="importers__step" data-marker="check">
+<span class="importers__step-bar" aria-hidden="true">
+</span>
+<span class="importers__step-label">
+<span class="importers__step-tick" aria-hidden="true">
+<svg width="14" height="14" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>Check</span>
+</li>
+<li class="importers__step" data-marker="import">
+<span class="importers__step-bar" aria-hidden="true">
+</span>
+<span class="importers__step-label">
+<span class="importers__step-tick" aria-hidden="true">
+<svg width="14" height="14" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>Import</span>
+</li>
+</ol>
+</div>
+<div class="importers__alert">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+<p>This importer has no process callback, so there is nothing for it to do with a row. That is a mistake in the plugin rather than in your file.</p>
+</div>
+<div data-region="alert" role="alert">
+</div>
+<section class="importers__section" data-step="choose">
+<div class="importers__card">
+<div class="importers__card-header">
+<h3 class="importers__card-title">Upload Your File</h3>
+<p class="importers__card-description">A spreadsheet saved as CSV, with the column names in the first row.</p>
+</div>
+<div class="importers__drop" data-region="drop">
+<input type="file" class="importers__file" id="myplugin-products-file" accept=".csv,text/csv" data-input="file" aria-describedby="myplugin-products-hint">
+<label class="importers__drop-label" for="myplugin-products-file">
+<span class="importers__drop-icon">
+<svg width="24" height="24" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+<span class="importers__drop-title">Drag and drop your CSV file here</span>
+<span class="importers__drop-or">or</span>
+<span class="importers__drop-button">Choose File</span>
+</label>
+<p class="importers__drop-hint" id="myplugin-products-hint">CSV files up to 8 MB</p>
+</div>
+<div class="importers__file-bar" data-region="chosen" role="status" hidden>
+<span class="importers__file-icon">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+<span class="importers__file-text">
+<span class="importers__file-name" data-region="file-name">
+</span>
+<span class="importers__file-meta" data-region="file-size">
+</span>
+</span>
+<button type="button" class="importers__icon-button" data-action="clear" aria-label="Remove This File">
+<svg width="18" height="18" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</button>
+</div>
+<div class="importers__actions">
+<button type="button" class="button button-primary" data-action="upload" disabled>Upload and Continue</button>
+</div>
+</div>
+<div class="importers__card importers__columns">
+<div class="importers__card-header importers__card-header--split">
+<div>
+<h3 class="importers__card-title">What Your File Needs</h3>
+<p class="importers__card-description">Columns can be in any order and named however you like: you match them up after uploading.</p>
+</div>
+<button type="button" class="button importers__sample" data-action="sample">
+<svg width="16" height="16" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>Download Sample File</button>
+</div>
+<table class="importers__table">
+<thead>
+<tr>
+<th scope="col">Column</th>
+<th scope="col">What Goes In It</th>
+<th scope="col" class="importers__needed">Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr data-field="sku" data-label="Code" data-holds="Text">
+<th scope="row">
+<span class="importers__label">Code</span>
+<code>sku</code>
+</th>
+<td>
+<span class="importers__holds">Text</span>
+</td>
+<td class="importers__needed">
+<span class="wp-status-badge wp-status-badge--default">
+<svg class="wp-status-badge__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" focusable="false">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>Optional</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="importers__section" data-step="map" hidden>
+<div class="importers__card">
+<div class="importers__card-header">
+<h3 class="importers__card-title" id="myplugin-products-map-title" tabindex="-1">Match Columns</h3>
+<p class="importers__card-description" data-region="matched">
+</p>
+</div>
+<div class="importers__file-bar">
+<span class="importers__file-icon">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+<span class="importers__file-text">
+<span class="importers__file-name" data-region="uploaded-name">
+</span>
+<span class="importers__file-meta" data-region="uploaded-rows">
+</span>
+</span>
+<button type="button" class="button-link importers__link" data-action="restart">Choose a Different File</button>
+</div>
+<div class="importers__map" data-region="mapping" role="group" aria-labelledby="myplugin-products-map-title">
+</div>
+<div class="importers__actions">
+<button type="button" class="button button-primary" data-action="check">Check File</button>
+<p class="importers__actions-note">Checking reads every row and reports any problems, without changing anything.</p>
+</div>
+</div>
+</section>
+<section class="importers__section" data-step="report" hidden>
+<div class="importers__card importers__report">
+<div class="importers__mark" data-region="mark" hidden>
+</div>
+<div class="importers__card-header">
+<h3 class="importers__card-title" id="myplugin-products-report-title" data-region="title" tabindex="-1">
+</h3>
+<p class="importers__card-description" data-region="lede">
+</p>
+</div>
+<div class="importers__progress" data-region="progress">
+<div class="importers__bar" role="progressbar" aria-labelledby="myplugin-products-report-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-region="bar">
+<span class="importers__bar-fill">
+</span>
+</div>
+<p class="importers__progress-count" data-region="count">
+</p>
+</div>
+<div data-region="summary">
+</div>
+<div data-region="errors">
+</div>
+<div class="importers__actions" data-region="report-actions" hidden>
+<button type="button" class="button button-primary" data-action="import">Import Now</button>
+<button type="button" class="button" data-action="back">Back to Matching</button>
+<button type="button" class="button" data-action="restart">Import Another File</button>
+</div>
+</div>
+</section>
+</div>
+<template class="importers__icons">
+<span data-icon="success">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+<span data-icon="warning">
+<svg width="20" height="20" class="sugarcommerce-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" d="…"/>
+</svg>
+</span>
+</template>
+</div>
