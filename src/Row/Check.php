@@ -12,6 +12,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Row;
 
+use SugarCommerce\Plugin\Build;
 use WP_Error;
 
 /**
@@ -126,7 +127,7 @@ final class Check {
 				/* translators: %s: the column's name. */
 				$message = __( '%s must be a currency code, such as USD, EUR or GBP.', 'sugarcommerce' );
 
-				return self::supported( 'SugarCommerce\\Money\\Currencies', 'supports', (string) $value )
+				return self::supported( 'Money\\Currencies', 'supports', (string) $value )
 					? null
 					: self::error( 'invalid_currency', $message, $label );
 
@@ -134,7 +135,7 @@ final class Check {
 				/* translators: %s: the column's name. */
 				$message = __( '%s must be a two-letter country code, such as US, GB or DE.', 'sugarcommerce' );
 
-				return self::supported( 'SugarCommerce\\Geo\\Countries', 'exists', (string) $value )
+				return self::supported( 'Geo\\Countries', 'exists', (string) $value )
 					? null
 					: self::error( 'invalid_country', $message, $label );
 
@@ -352,13 +353,19 @@ final class Check {
 	 * table of every ISO currency. Absent, the code is accepted as given,
 	 * which is what the field would have got as a plain string anyway.
 	 *
-	 * @param string $holder The class that holds the list.
+	 * Each is the copy in this build, by Build::sibling(): written out, the
+	 * name stays `SugarCommerce\…` in a plugin that does not bundle the list,
+	 * and finds SugarCart's copy when SugarCart is active.
+	 *
+	 * @param string $holder The class that holds the list, after `SugarCommerce\`.
 	 * @param string $method What to ask it.
 	 * @param string $code   The code.
 	 *
 	 * @return bool
 	 */
 	private static function supported( string $holder, string $method, string $code ): bool {
+		$holder = Build::sibling( __NAMESPACE__, 3, $holder );
+
 		return ! method_exists( $holder, $method ) || (bool) $holder::$method( $code );
 	}
 

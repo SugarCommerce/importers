@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Traits\Screen;
 
-use SugarCommerce\Fields\Icons\Icons;
+use SugarCommerce\Plugin\Build;
 
 /**
  * The screen's icons, and each field type's line saying what it takes.
@@ -94,8 +94,10 @@ trait Glyphs {
 	private static function ui_icon( string $name, int $size = 20 ): string {
 		$pair = self::ICONS[ $name ];
 
-		return class_exists( Icons::class )
-			? Icons::render( $pair[0], [ 'size' => $size ] )
+		$icons = self::icon_kit();
+
+		return null !== $icons
+			? $icons::render( $pair[0], [ 'size' => $size ] )
 			: self::icon( $pair[1] );
 	}
 
@@ -117,8 +119,10 @@ trait Glyphs {
 	 * @return string Markup, or '' when there is no icon to draw.
 	 */
 	private static function icon( mixed $value ): string {
-		if ( class_exists( Icons::class ) ) {
-			return Icons::render( $value );
+		$icons = self::icon_kit();
+
+		if ( null !== $icons ) {
+			return $icons::render( $value );
 		}
 
 		if ( ! is_string( $value ) ) {
@@ -150,6 +154,21 @@ trait Glyphs {
 	 * @return string
 	 */
 	private static function default_icon(): string {
-		return class_exists( Icons::class ) ? 'heroicons-outline:arrow-up-tray' : 'upload';
+		return null !== self::icon_kit() ? 'heroicons-outline:arrow-up-tray' : 'upload';
+	}
+
+	/**
+	 * sugarcommerce/fields' Icons in this build, when the build has it.
+	 *
+	 * Asked through Build::sibling() rather than imported: a plugin that
+	 * bundles importers without fields would otherwise find SugarCart's
+	 * unprefixed copy.
+	 *
+	 * @return class-string|null
+	 */
+	private static function icon_kit(): ?string {
+		$icons = Build::sibling( __NAMESPACE__, 4, 'Fields\\Icons\\Icons' );
+
+		return class_exists( $icons ) ? $icons : null;
 	}
 }

@@ -12,7 +12,6 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers;
 
-use SugarCommerce\Fields\Icons\Icons;
 use SugarCommerce\Importers\Traits\Screen\Glyphs;
 use SugarCommerce\Importers\Traits\Screen\Steps;
 use SugarCommerce\Importers\Utils\Runtime;
