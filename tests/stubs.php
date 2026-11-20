@@ -733,8 +733,9 @@ if ( ! function_exists( 'wp_register_style' ) ) {
 
 if ( ! function_exists( 'wp_register_script' ) ) {
 	function wp_register_script( $handle, $src, $deps = [], $ver = false, $args = [] ) {
-		$GLOBALS['ri_enqueued'][ $handle ]['script'] = $src;
-		$GLOBALS['ri_enqueued'][ $handle ]['deps']   = $deps;
+		$GLOBALS['ri_enqueued'][ $handle ]['script']    = $src;
+		$GLOBALS['ri_enqueued'][ $handle ]['deps']      = $deps;
+		$GLOBALS['ri_enqueued'][ $handle ]['in_footer'] = is_array( $args ) ? ! empty( $args['in_footer'] ) : (bool) $args;
 
 		return true;
 	}
@@ -760,4 +761,16 @@ if ( ! function_exists( 'wp_set_script_translations' ) ) {
 
 if ( ! function_exists( 'wp_enqueue_script' ) ) {
 	function wp_enqueue_script( $handle ) {}
+}
+
+if ( ! function_exists( '__return_true' ) ) {
+	/**
+	 * Core's callback that says yes: the operations' process callback here,
+	 * so they are runnable as they would be on a site.
+	 *
+	 * @return bool
+	 */
+	function __return_true() {
+		return true;
+	}
 }

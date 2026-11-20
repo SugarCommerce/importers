@@ -112,8 +112,9 @@ onboarding's segments, with one card under it for the step it is on:
 
 Anything that goes wrong is said in words, above the step: the server's
 own reason when it gave one, and "We couldn't reach your site" rather than
-"Failed to fetch" when it did not. The script's words are translated
-through `wp.i18n` in the `sugarcommerce` text domain. Every layout is
+"Failed to fetch" when it did not, and a page left open past its nonce's
+day renews the nonce rather than failing. The script's words are
+translated in the `sugarcommerce` text domain. Every layout is
 written with logical properties, so right-to-left needs no second
 stylesheet, and is checked at 1440 and 390 pixels wide.
 
@@ -228,6 +229,60 @@ The screen's own `icon`, for a top-level menu (`parent_slug` set to `''`), is
 drawn by WordPress's admin menu, so it stays a Dashicons class, a URL or a
 `data:image/svg+xml;base64,` URI; it defaults to `dashicons-upload`.
 
+## The scripts
+
+Plain JavaScript in ES modules (`src/js`), each with one job, built by
+`@wordpress/scripts` into `assets/build` -- one file, `importers.js`, with an
+`importers.asset.php` naming the WordPress scripts it imports
+(`wp-api-fetch`, `wp-dom-ready`, `wp-i18n`) and a version that changes with
+its contents. `Importer::enqueue()` loads it on the screen's own page with
+`SugarCommerce\Plugin\Assets::enqueue_built_script()`, under the copy's
+handle (`Runtime::handle()`), in the footer, its words translated in the
+`sugarcommerce` text domain. No jQuery; it never had any.
+
+| Module | Its job |
+|---|---|
+| `importers.js` | The entry: once the page is ready, every `[data-importer][data-operation]` on it is wired up |
+| `importers/operation` | One operation: what each `data-action` button does, every button waiting while one runs, a failure said above the step |
+| `importers/view` | The operation's regions and buttons, the step shown and the segments moved along to it |
+| `importers/choose` | A file that is not a `.csv` or is over the site's limit turned away before it is sent; a file dropped on the zone put into the input; the chosen file's name and size |
+| `importers/mapping` | The matching rows, read from the columns table; the obvious header chosen (case, spaces and punctuation aside); what the first row holds; a required column left empty marked |
+| `importers/walk` | The batches: each starts where the server said the last stopped, and one that gets nowhere ends the walk rather than looping |
+| `importers/report` | The bar, then how a check or an import went, the rows with problems, and what comes next |
+| `importers/sample` | The sample file handed over as a download |
+| `lib/config` | The one reader of what PHP printed: the operation element's `data-*` |
+| `lib/rest` | Every request, through `@wordpress/api-fetch`; every failure as words a person can act on |
+| `lib/format`, `lib/dom` | Numbers, sizes and lists as a reader writes them; elements built with `textContent`, so a file's own words are never markup |
+
+What other code may rely on is unchanged:
+
+* the handle, `Runtime::handle()`, and every class and `data-*` attribute
+  the screen prints or the script adds (`data-state`, `is-current`,
+  `is-done`, `is-dragging`, `is-invalid`, `aria-busy`, the `importers__*`
+  rows, figures and problem list);
+* every request, each with `X-WP-Nonce`: `upload` (the file as
+  `import_file`, with `page`), `file/{uuid}` (its first rows, and `DELETE`
+  to throw it away -- sent by apiFetch as a `POST` with
+  `X-HTTP-Method-Override: DELETE`, which the REST API reads as a delete),
+  `sample` (`page`, `operation`) and the JSON posted to `run` (`page`,
+  `operation`, `uuid`, `mapping`, `commit`, `offset`).
+
+The script never set a global and fires no events, so there is none to
+keep.
+
+```bash
+npm ci
+npm run build      # assets/build, committed
+npm run start      # rebuild on change
+npm run test:js    # Vitest, in jsdom (composer test:js runs it too)
+npm run lint:js
+```
+
+The tests run the script on the markup `ScreenSnapshotTest` holds the
+screen to (`tests/snapshots/screen.html`), against a stand-in for the
+endpoints. The build's files are what ship, with the sources beside them.
+CI builds again and fails when the result differs from what was committed.
+
 ## Two plugins, one library
 
 Bundled by Strauss into two plugins, each copy has its own REST namespace,
@@ -275,11 +330,13 @@ The screen is no longer core's `.postbox`, `.form-table`, `.widefat` and
 `importers-progress`, `importers-errors` and `importers-summary` classes are
 now `importers__bar`, `importers__problem-list` and `importers__stats`
 (every class is `importers__*`), and it requires `sugarcommerce/status-badge`
-for the Required and Optional badges. The script needs `wp-i18n` rather than
-`wp-api-fetch`, which it never called.
+for the Required and Optional badges. The script is built from `src/js` into
+`assets/build/importers.js` (see [The scripts](#the-scripts)) and now goes
+through `wp-api-fetch`, so a nonce that runs out while the screen is open is
+renewed.
 
-Kept as they were: the `assets/css/importers.css`
-and `assets/js/importers.js` file names, the `uploads/importers/` directory
+Kept as they were: the `assets/css/importers.css` file name, the
+`uploads/importers/` directory
 and the `import_file` upload field. A site whose daily sweep was scheduled by
 the old copy keeps an `importers_sweep` event with nothing hooked to it until
 it is cleared.

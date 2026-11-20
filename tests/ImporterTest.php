@@ -572,7 +572,8 @@ final class ImporterTest extends TestCase {
 	 * The screen's stylesheet and script are this package's own, served
 	 * from wherever the package sits, by sugarcommerce/plugin's Assets. The
 	 * badges' stylesheet comes first, because the screen's sits over it,
-	 * and the script's words are in the library's text domain.
+	 * the script is the build, in the footer, needing what its manifest
+	 * names, and the script's words are in the library's text domain.
 	 */
 	public function test_the_screen_loads_the_packages_assets(): void {
 		$this->importer()->enqueue();
@@ -581,8 +582,9 @@ final class ImporterTest extends TestCase {
 
 		$this->assertStringStartsWith( 'https://example.test/wp-content/', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
 		$this->assertStringEndsWith( '/importers/assets/css/importers.css', $GLOBALS['ri_enqueued'][ $handle ]['style'] );
-		$this->assertStringEndsWith( '/importers/assets/js/importers.js', $GLOBALS['ri_enqueued'][ $handle ]['script'] );
-		$this->assertSame( [ 'wp-i18n' ], $GLOBALS['ri_enqueued'][ $handle ]['deps'] );
+		$this->assertStringEndsWith( '/importers/assets/build/importers.js', $GLOBALS['ri_enqueued'][ $handle ]['script'] );
+		$this->assertSame( [ 'wp-api-fetch', 'wp-dom-ready', 'wp-i18n' ], $GLOBALS['ri_enqueued'][ $handle ]['deps'] );
+		$this->assertTrue( $GLOBALS['ri_enqueued'][ $handle ]['in_footer'] );
 		$this->assertSame( [ StatusBadge::handle() ], $GLOBALS['ri_enqueued'][ $handle ]['style_deps'] );
 		$this->assertStringEndsWith( '/status-badge/assets/css/status-badge.css', $GLOBALS['ri_enqueued'][ StatusBadge::handle() ]['style'] );
 		$this->assertSame( 'sugarcommerce', $GLOBALS['ri_enqueued'][ $handle ]['domain'] );

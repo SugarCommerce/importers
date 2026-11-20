@@ -310,12 +310,12 @@ final class Importer {
 		( new StatusBadge() )->enqueue();
 
 		Assets::enqueue_style( Runtime::handle(), __FILE__, 'css/importers.css', [ StatusBadge::handle() ] );
-		Assets::enqueue_script( Runtime::handle(), __FILE__, 'js/importers.js', [ 'wp-i18n' ] );
 
-		// The script's words -- "Imported 40 of 120 rows" -- in the
+		// Built from src/js into assets/build, in the footer. Its manifest
+		// names what it imports -- wp-api-fetch, which renews a nonce that
+		// ran out while the screen was open, wp-dom-ready and wp-i18n -- and
+		// the helper puts its words ("Imported 40 of 120 rows") in the
 		// library's text domain, like the screen around them.
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( Runtime::handle(), 'sugarcommerce' );
-		}
+		Assets::enqueue_built_script( Runtime::handle(), __FILE__, 'importers' );
 	}
 }
