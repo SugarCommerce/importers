@@ -10,8 +10,8 @@ import {
 	picked,
 	problemWith,
 	showChosen,
-} from '../../src/js/importers/choose';
-import { createView } from '../../src/js/importers/view';
+} from '../../assets/js/importers/choose';
+import { createView } from '../../assets/js/importers/view';
 import {
 	FakeTransfer,
 	controlFiles,

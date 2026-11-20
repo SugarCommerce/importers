@@ -44,7 +44,7 @@ final class Resolve {
 	 *
 	 * @var string[]
 	 */
-	public const TYPES = [ 'post', 'term', 'user', 'attachment' ];
+	public const array TYPES = [ 'post', 'term', 'user', 'attachment' ];
 
 	/**
 	 * What has already been looked up this request.

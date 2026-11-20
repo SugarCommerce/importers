@@ -34,12 +34,12 @@ final class Upload {
 	/**
 	 * The directory under uploads.
 	 */
-	private const DIRECTORY = 'importers';
+	private const string DIRECTORY = 'importers';
 
 	/**
 	 * How long a file is kept.
 	 */
-	private const LIFETIME = DAY_IN_SECONDS;
+	private const int LIFETIME = DAY_IN_SECONDS;
 
 	/**
 	 * What a CSV file is allowed to look like from the inside.
@@ -49,7 +49,7 @@ final class Upload {
 	 *
 	 * @var string[]
 	 */
-	private const TYPES = [
+	private const array TYPES = [
 		'text/csv',
 		'text/plain',
 		'application/csv',

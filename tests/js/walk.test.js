@@ -5,7 +5,7 @@
 
 import { describe, expect, test, vi } from 'vitest';
 
-import { walk } from '../../src/js/importers/walk';
+import { walk } from '../../assets/js/importers/walk';
 
 const BODY = {
 	page: 'shop',

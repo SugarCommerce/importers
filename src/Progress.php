@@ -33,12 +33,12 @@ final class Progress {
 	/**
 	 * How many messages are worth keeping.
 	 */
-	private const KEEP = 100;
+	private const int KEEP = 100;
 
 	/**
 	 * How long a run is remembered.
 	 */
-	private const LIFETIME = HOUR_IN_SECONDS;
+	private const int LIFETIME = HOUR_IN_SECONDS;
 
 	/**
 	 * The run.

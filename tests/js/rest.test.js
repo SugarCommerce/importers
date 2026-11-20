@@ -5,7 +5,12 @@
 
 import { describe, expect, test, vi } from 'vitest';
 
-import { createAsk, failure, friendly, refusal } from '../../src/js/lib/rest';
+import {
+	createAsk,
+	failure,
+	friendly,
+	refusal,
+} from '../../assets/js/lib/rest';
 
 const REST = 'https://example.test/wp-json/sugarcommerce-importers/v1/';
 

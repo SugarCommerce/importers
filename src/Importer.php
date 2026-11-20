@@ -311,7 +311,7 @@ final class Importer {
 
 		Assets::enqueue_style( Runtime::handle(), __FILE__, 'css/importers.css', [ StatusBadge::handle() ] );
 
-		// Built from src/js into assets/build, in the footer. Its manifest
+		// Built from assets/js into assets/build, in the footer. Its manifest
 		// names what it imports -- wp-api-fetch, which renews a nonce that
 		// ran out while the screen was open, wp-dom-ready and wp-i18n -- and
 		// the helper puts its words ("Imported 40 of 120 rows") in the

@@ -40,7 +40,7 @@ final class Runtime {
 	/**
 	 * This library's own identifier, used when running unprefixed.
 	 */
-	private const LIBRARY = 'sugarcommerce-importers';
+	private const string LIBRARY = 'sugarcommerce-importers';
 
 	/**
 	 * How many segments this class's own namespace has —
@@ -48,7 +48,7 @@ final class Runtime {
 	 * written out: Strauss rewrites a namespace it finds in a string, and
 	 * would prefix the very thing being compared against.
 	 */
-	private const OWN_SEGMENTS = 3;
+	private const int OWN_SEGMENTS = 3;
 
 	/**
 	 * The per-build prefix.

@@ -231,7 +231,7 @@ drawn by WordPress's admin menu, so it stays a Dashicons class, a URL or a
 
 ## The scripts
 
-Plain JavaScript in ES modules (`src/js`), each with one job, built by
+Plain JavaScript in ES modules (`assets/js`), each with one job, built by
 `@wordpress/scripts` into `assets/build` -- one file, `importers.js`, with an
 `importers.asset.php` naming the WordPress scripts it imports
 (`wp-api-fetch`, `wp-dom-ready`, `wp-i18n`) and a version that changes with
@@ -296,50 +296,37 @@ prefix that itself starts `SugarCommerce\` keeps all its segments --
 `sugarcommerce-playground-vendor-sugarcommerce-importers/v1` -- so a plugin of
 the family is never taken for an unprefixed copy.
 
-## Moving from arraypress/wp-*
+## Security
 
-`arraypress/wp-register-importers` (`ArrayPress\RegisterImporters`) is this
-package. Every class, method, configuration key, field type and callback
-keeps its name; the global functions are the `Importers` statics they always
-called. It no longer needs `wp-composer-assets`; it now requires
-`sugarcommerce/jobs` (the batch time budget), `sugarcommerce/text` (the
-sample's cells and the byte-order mark) and `sugarcommerce/status-badge`
-(the columns' Required and Optional badges).
+* Importing where you may not: every route asks the import screen's own
+  permission before it does anything; the core REST nonce covers forgery.
+* Someone else's file: an upload belongs to the user who sent it, and its
+  preview, check, import, progress and removal are refused to anyone else.
+* A file that is not a CSV: the name must end in `.csv` and the contents
+  must read as text to `finfo`, whatever the name says.
+* A path from the request: what is written is a fresh UUID under a private
+  uploads folder (denied to the web, no listing); the name sent is only
+  shown back.
+* A forged column match: only the operation's own fields are read from a
+  mapping, and the columns are looked up, never evaluated.
+* Spreadsheet formulas in the sample file: its cells go through
+  `SugarCommerce\Text\Csv`.
+* Markup in a file: the screen's script writes what a file holds as text,
+  never as HTML.
 
-| Old | New |
-|---|---|
-| `ArrayPress\RegisterImporters\*` | `SugarCommerce\Importers\*` |
-| `register_importers( $id, $config )` | `Importers::register( $id, $config )` |
-| `get_registered_importers( $id )` | `Importers::get( $id )` |
-| `get_registered_importers_url( $id, $tab )` | `Importers::url( $id, $tab )` |
-| `unregister_importers( $id )` | `Importers::unregister( $id )` |
-| `arraypress/wp-field-kit` (suggested, icons) | `sugarcommerce/fields` (suggested) |
-| `arraypress/wp-countries` (suggested, `country` check) | `sugarcommerce/geo` (`Countries::exists()`) |
-| `arraypress/wp-money` (suggested, `currency` check — it asked a class that was not there, so every code passed) | `sugarcommerce/money` (`Currencies::supports()`) |
-| a batch was always `batch_size` rows | at most `batch_size` rows and `time_limit` seconds (default 20; `0` for the old behaviour) |
-| sample cells written as given | made safe to open (`=…` gets a leading apostrophe) |
-| REST namespace `importers/v1` | `sugarcommerce-importers/v1` (`Runtime::rest_namespace()`); prefixed builds `{prefix}-sugarcommerce-importers/v1` |
-| script and style handle `importers` | `sugarcommerce-importers` (`Runtime::handle()`) |
-| `Utils\Assets` (its own copy of the asset-URL arithmetic) | `SugarCommerce\Plugin\Assets`, the one asset-URL helper of these packages |
-| transients `importers_file_{uuid}`, `importers_run_{uuid}`, hook `importers_sweep` | `sugarcommerce_importers_…` (`Runtime::key()`, `Runtime::hook()`) |
-| icon class `arraypress-icon` | `sugarcommerce-icon` (`Screen::ICON_CLASS`, the same as sugarcommerce/fields') |
-| text domain `arraypress` | `sugarcommerce` |
+## Source layout
 
-The screen is no longer core's `.postbox`, `.form-table`, `.widefat` and
-`.nav-tab-wrapper`: it is drawn in the family's cards, so the old
-`importers-progress`, `importers-errors` and `importers-summary` classes are
-now `importers__bar`, `importers__problem-list` and `importers__stats`
-(every class is `importers__*`), and it requires `sugarcommerce/status-badge`
-for the Required and Optional badges. The script is built from `src/js` into
-`assets/build/importers.js` (see [The scripts](#the-scripts)) and now goes
-through `wp-api-fetch`, so a nonce that runs out while the screen is open is
-renewed.
-
-Kept as they were: the `assets/css/importers.css` file name, the
-`uploads/importers/` directory
-and the `import_file` upload field. A site whose daily sweep was scheduled by
-the old copy keeps an `importers_sweep` event with nothing hooked to it until
-it is cleared.
+* `src/Importers.php` (the registry), `Importer.php` (one import screen),
+  `Operation.php` (one kind of thing to import), `Progress.php`.
+* `src/Screen.php`: drawing the screen, with `src/Traits/Screen/` (the steps,
+  the icons).
+* `src/Rest/Controller.php`: the routes and their permission, with
+  `src/Traits/Rest/Controller/` (files; batches).
+* `src/Csv/` (reading, receiving and the sample file), `src/Row/` (casting,
+  checking and resolving a row, and the pipeline through them),
+  `src/Utils/Runtime.php` (names).
+* `src/` is PHP only. The script's sources are in `assets/js/`, built to
+  `assets/build/`; the styles are in `assets/css/`.
 
 ## Requirements
 

@@ -13,8 +13,8 @@ import {
 	percent,
 	problems,
 	stopped,
-} from '../../src/js/importers/report';
-import { createView } from '../../src/js/importers/view';
+} from '../../assets/js/importers/report';
+import { createView } from '../../assets/js/importers/view';
 import { loadScreen, said } from './support/screen';
 
 let box;

@@ -5,8 +5,8 @@
 
 import { beforeEach, describe, expect, test } from 'vitest';
 
-import { icon } from '../../src/js/lib/dom';
-import { STEPS, createView } from '../../src/js/importers/view';
+import { icon } from '../../assets/js/lib/dom';
+import { STEPS, createView } from '../../assets/js/importers/view';
 import { loadScreen, said } from './support/screen';
 
 let box;

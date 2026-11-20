@@ -13,8 +13,8 @@ import {
 	match,
 	matchedSummary,
 	unmatched,
-} from '../../src/js/importers/mapping';
-import { createView } from '../../src/js/importers/view';
+} from '../../assets/js/importers/mapping';
+import { createView } from '../../assets/js/importers/view';
 import { loadScreen, said } from './support/screen';
 
 const FILE = {

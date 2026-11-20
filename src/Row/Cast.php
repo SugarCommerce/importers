@@ -35,21 +35,21 @@ final class Cast {
 	 *
 	 * @var string[]
 	 */
-	private const TRUE = [ '1', 'true', 'yes', 'y', 'on', 't' ];
+	private const array TRUE = [ '1', 'true', 'yes', 'y', 'on', 't' ];
 
 	/**
 	 * Words for no.
 	 *
 	 * @var string[]
 	 */
-	private const FALSE = [ '0', 'false', 'no', 'n', 'off', 'f' ];
+	private const array FALSE = [ '0', 'false', 'no', 'n', 'off', 'f' ];
 
 	/**
 	 * The types this class knows how to cast.
 	 *
 	 * @var string[]
 	 */
-	public const SCALARS = [ 'string', 'number', 'integer', 'boolean', 'email', 'url', 'currency', 'country', 'date', 'datetime' ];
+	public const array SCALARS = [ 'string', 'number', 'integer', 'boolean', 'email', 'url', 'currency', 'country', 'date', 'datetime' ];
 
 	/**
 	 * Cast one value.

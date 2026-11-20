@@ -6,7 +6,7 @@
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { setupOperation } from '../../src/js/importers/operation';
+import { setupOperation } from '../../assets/js/importers/operation';
 import {
 	FakeTransfer,
 	controlFiles,

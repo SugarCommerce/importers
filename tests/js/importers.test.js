@@ -6,7 +6,7 @@
 
 import { describe, expect, test, vi } from 'vitest';
 
-import { save } from '../../src/js/importers/sample';
+import { save } from '../../assets/js/importers/sample';
 import { loadScreen, press, settle } from './support/screen';
 
 const ready = vi.hoisted( () => ( { run: null } ) );
@@ -31,7 +31,7 @@ describe( 'the entry', () => {
 		other.dataset.nonce = 'other';
 		box.after( other );
 
-		await import( '../../src/js/importers.js' );
+		await import( '../../assets/js/importers.js' );
 
 		expect( typeof ready.run ).toBe( 'function' );
 

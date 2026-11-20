@@ -4,8 +4,8 @@
 
 import { describe, expect, test } from 'vitest';
 
-import { settings } from '../../src/js/lib/config';
-import { count, sentence, size, squash } from '../../src/js/lib/format';
+import { settings } from '../../assets/js/lib/config';
+import { count, sentence, size, squash } from '../../assets/js/lib/format';
 
 describe( 'count', () => {
 	test( 'a number as the reader writes it, nothing as 0', () => {

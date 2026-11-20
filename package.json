@@ -5,11 +5,11 @@
   "description": "The import screen's script -- choosing or dropping a file, matching its columns, the dry run and the import a batch at a time -- built to assets/build with @wordpress/scripts.",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "build": "wp-scripts build importers=./src/js/importers.js --output-path=assets/build",
-    "start": "wp-scripts start importers=./src/js/importers.js --output-path=assets/build",
+    "build": "wp-scripts build importers=./assets/js/importers.js --output-path=assets/build",
+    "start": "wp-scripts start importers=./assets/js/importers.js --output-path=assets/build",
     "test:js": "wp-scripts test-unit-js",
-    "lint:js": "wp-scripts lint-js src/js tests/js",
-    "format:js": "wp-scripts format src/js tests/js"
+    "lint:js": "wp-scripts lint-js assets/js tests/js",
+    "format:js": "wp-scripts format assets/js tests/js"
   },
   "devDependencies": {
     "@wordpress/api-fetch": "^8.1.0",
