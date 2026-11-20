@@ -15,6 +15,7 @@
     "sugarcommerce/jobs": "dev-main",
     "sugarcommerce/plugin": "dev-main",
     "sugarcommerce/status-badge": "dev-main",
+    "sugarcommerce/support": "dev-main",
     "sugarcommerce/text": "dev-main"
   },
   "require-dev": {
@@ -31,6 +32,13 @@
     "sugarcommerce/money": "Checks that a currency column holds a real ISO 4217 code."
   },
   "repositories": [
+    {
+      "type": "path",
+      "url": "../support",
+      "options": {
+        "symlink": false
+      }
+    },
     {
       "type": "path",
       "url": "../plugin",

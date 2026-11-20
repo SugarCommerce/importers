@@ -13,6 +13,7 @@ declare( strict_types=1 );
 namespace SugarCommerce\Importers\Csv;
 
 use SugarCommerce\Importers\Utils\Runtime;
+use SugarCommerce\Text\CsvReader;
 use WP_Error;
 
 /**
@@ -109,7 +110,7 @@ final class Upload {
 			return new WP_Error( 'not_saved', __( 'The file could not be saved.', 'sugarcommerce' ) );
 		}
 
-		$reader  = new Reader( $path );
+		$reader  = new CsvReader( $path );
 		$headers = $reader->headers();
 
 		if ( $headers instanceof WP_Error ) {
@@ -177,7 +178,7 @@ final class Upload {
 			return false;
 		}
 
-		Reader::forget( (string) $stored['path'] );
+		CsvReader::forget( (string) $stored['path'] );
 		wp_delete_file( (string) $stored['path'] );
 		delete_transient( Runtime::key( 'file_' . $uuid ) );
 
@@ -207,7 +208,7 @@ final class Upload {
 				continue;
 			}
 
-			Reader::forget( (string) $path );
+			CsvReader::forget( (string) $path );
 			wp_delete_file( (string) $path );
 
 			++$removed;

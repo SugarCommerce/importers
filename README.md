@@ -322,8 +322,10 @@ the family is never taken for an unprefixed copy.
   the icons).
 * `src/Rest/Controller.php`: the routes and their permission, with
   `src/Traits/Rest/Controller/` (files; batches).
-* `src/Csv/` (reading, receiving and the sample file), `src/Row/` (casting,
-  checking and resolving a row, and the pipeline through them),
+* `src/Csv/` (receiving the upload and the sample file), `src/Row/` (checking
+  and resolving a row, and the pipeline through them). The file is read a
+  batch at a time by `sugarcommerce/text`'s `CsvReader`, and each cell cast
+  by `sugarcommerce/support`'s `Cast::to()`;
   `src/Utils/Runtime.php` (names).
 * `src/` is PHP only. The script's sources are in `assets/js/`, built to
   `assets/build/`; the styles are in `assets/css/`.
@@ -332,6 +334,7 @@ the family is never taken for an unprefixed copy.
 
 * PHP 8.3 or later
 * WordPress 7.1 or later
+* `sugarcommerce/text` (reading the file), `sugarcommerce/support` (casting a cell), `sugarcommerce/jobs`, `sugarcommerce/status-badge` and `sugarcommerce/plugin`
 
 ## License
 

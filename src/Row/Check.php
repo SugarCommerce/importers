@@ -17,7 +17,7 @@ use WP_Error;
 /**
  * Whether a value is allowed to be what it is.
  *
- * Separate from Cast because the two questions are different. Cast asks what
+ * Separate from support's Cast because the two questions are different. Cast asks what
  * `£1,299.00` means; this asks whether 1299 is within the range the field
  * declared. Running them together is how a value that could not be cast ends
  * up validated as though it had been.

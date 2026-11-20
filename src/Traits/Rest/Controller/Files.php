@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Traits\Rest\Controller;
 
-use SugarCommerce\Importers\Csv\Reader;
+use SugarCommerce\Text\CsvReader;
 use SugarCommerce\Importers\Csv\Upload;
 use WP_Error;
 use WP_REST_Request;
@@ -54,7 +54,7 @@ trait Files {
 			return self::failed( $file );
 		}
 
-		$batch = ( new Reader( (string) $file['path'] ) )->batch( 0, 5 );
+		$batch = ( new CsvReader( (string) $file['path'] ) )->batch( 0, 5 );
 
 		if ( $batch instanceof WP_Error ) {
 			return self::failed( $batch );

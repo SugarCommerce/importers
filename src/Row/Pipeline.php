@@ -12,6 +12,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Row;
 
+use SugarCommerce\Support\Cast;
 use WP_Error;
 
 /**

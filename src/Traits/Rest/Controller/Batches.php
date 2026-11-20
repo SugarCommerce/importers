@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Traits\Rest\Controller;
 
-use SugarCommerce\Importers\Csv\Reader;
+use SugarCommerce\Text\CsvReader;
 use SugarCommerce\Importers\Operation;
 use SugarCommerce\Importers\Progress;
 use SugarCommerce\Importers\Row\Resolve;
@@ -62,7 +62,7 @@ trait Batches {
 			}
 		}
 
-		$batch = ( new Reader( (string) $file['path'], (string) $operation->get( 'separator', ',' ) ) )
+		$batch = ( new CsvReader( (string) $file['path'], (string) $operation->get( 'separator', ',' ) ) )
 			->batch( $offset, $operation->batch_size() );
 
 		if ( $batch instanceof WP_Error ) {

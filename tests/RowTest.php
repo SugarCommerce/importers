@@ -148,7 +148,7 @@ final class RowTest extends TestCase {
 			( new \DateTimeImmutable( 'today', new \DateTimeZone( 'America/New_York' ) ) )->format( 'Y-m-d' ),
 			$this->field( 'today', [ 'type' => 'date' ] )
 		);
-		$this->assertSame( 'not a date', \SugarCommerce\Importers\Row\Cast::to( 'not a date', 'date' ), 'Handed back for Check to refuse.' );
+		$this->assertSame( 'not a date', \SugarCommerce\Support\Cast::to( 'not a date', 'date' ), 'Handed back for Check to refuse.' );
 	}
 
 	/**

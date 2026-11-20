@@ -63,7 +63,7 @@ function ri_reset_globals(): void {
 	}
 
 	if ( class_exists( 'SugarCommerce\\Importers\\Csv\\Reader' ) ) {
-		SugarCommerce\Importers\Csv\Reader::forget();
+		SugarCommerce\Text\CsvReader::forget();
 	}
 }
 

@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Importers\Tests;
 
-use SugarCommerce\Importers\Csv\Reader;
+use SugarCommerce\Text\CsvReader;
 use SugarCommerce\Importers\Csv\Sample;
 use SugarCommerce\Importers\Importers;
 use SugarCommerce\Importers\Rest\Controller;
@@ -42,7 +42,7 @@ final class RunTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		ri_reset_globals();
-		Reader::forget();
+		CsvReader::forget();
 	}
 
 	/**
@@ -53,7 +53,7 @@ final class RunTest extends TestCase {
 			unlink( $this->path );
 		}
 
-		Reader::forget();
+		CsvReader::forget();
 	}
 
 	/**
@@ -309,6 +309,6 @@ final class RunTest extends TestCase {
 
 		file_put_contents( $this->path, "\xEF\xBB\xBFCode,Name\nA,One\n" );
 
-		$this->assertSame( [ 'Code', 'Name' ], ( new Reader( $this->path ) )->headers() );
+		$this->assertSame( [ 'Code', 'Name' ], ( new CsvReader( $this->path ) )->headers() );
 	}
 }

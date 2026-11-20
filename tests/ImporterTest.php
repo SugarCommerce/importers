@@ -509,7 +509,7 @@ final class ImporterTest extends TestCase {
 
 		file_put_contents( $path, $sample );
 
-		$batch = ( new \SugarCommerce\Importers\Csv\Reader( $path ) )->batch( 0, 1 );
+		$batch = ( new \SugarCommerce\Text\CsvReader( $path ) )->batch( 0, 1 );
 
 		unlink( $path );
 
